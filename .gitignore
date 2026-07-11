@@ -1,0 +1,36 @@
+# Build artifacts
+build/
+cmake-build-*/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# vcpkg
+vcpkg_installed/
+
+# Compiled objects
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+
+# Test and benchmark output
+Testing/
+*.gcov
+*.gcda
+*.gcno
+
+# Qt (Phase 8)
+*.moc
+moc_*.cpp
+ui_*.h
+qrc_*.cpp

@@ -1,0 +1,8 @@
+{
+  "name": "mercury-exchange-engine",
+  "version-string": "0.1.0",
+  "description": "Modular, low-latency electronic exchange simulator in Modern C++20",
+  "dependencies": [
+    "gtest"
+  ]
+}
