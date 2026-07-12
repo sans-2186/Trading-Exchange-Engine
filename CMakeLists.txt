@@ -60,6 +60,8 @@ add_executable(mercury_tests
     tests/unit/test_smoke.cpp
     tests/unit/test_order_book.cpp
     tests/unit/test_matching_engine.cpp
+    tests/integration/test_engine_integration.cpp
+    tests/stress/test_random_stress.cpp
 )
 
 target_link_libraries(mercury_tests PRIVATE mercury_core GTest::gtest_main)
