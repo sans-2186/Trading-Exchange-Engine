@@ -23,6 +23,8 @@ endif()
 # --- mercury_core static library ---
 add_library(mercury_core STATIC
     src/core/version.cpp
+    src/core/price_level.cpp
+    src/core/order_book.cpp
 )
 
 target_include_directories(mercury_core
@@ -55,6 +57,7 @@ endif()
 
 add_executable(mercury_tests
     tests/unit/test_smoke.cpp
+    tests/unit/test_order_book.cpp
 )
 
 target_link_libraries(mercury_tests PRIVATE mercury_core GTest::gtest_main)
