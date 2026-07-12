@@ -25,6 +25,7 @@ add_library(mercury_core STATIC
     src/core/version.cpp
     src/core/price_level.cpp
     src/core/order_book.cpp
+    src/core/matching_engine.cpp
 )
 
 target_include_directories(mercury_core
@@ -58,6 +59,7 @@ endif()
 add_executable(mercury_tests
     tests/unit/test_smoke.cpp
     tests/unit/test_order_book.cpp
+    tests/unit/test_matching_engine.cpp
 )
 
 target_link_libraries(mercury_tests PRIVATE mercury_core GTest::gtest_main)

@@ -54,6 +54,11 @@ public:
     [[nodiscard]] const BidSide& bids() const noexcept { return bids_; }
     [[nodiscard]] const AskSide& asks() const noexcept { return asks_; }
 
+    // Mutable level access for the MatchingEngine (apply_fill on partial fills).
+    // Precondition: price exists in the respective side — caller must verify.
+    [[nodiscard]] PriceLevel& bid_level(Price price) { return bids_.at(price); }
+    [[nodiscard]] PriceLevel& ask_level(Price price) { return asks_.at(price); }
+
 private:
     // Tracks where each order lives so cancel is O(1).
     struct OrderLocation {

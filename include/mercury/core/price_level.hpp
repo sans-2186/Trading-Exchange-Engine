@@ -32,6 +32,12 @@ public:
     // O(1)
     void remove(Iterator it);
 
+    // Records a partial fill against the order at `it`, updating both the
+    // order's filled field and the cached total_quantity_ in one controlled step.
+    // Maintains the class invariant without exposing mutable Order references.
+    // O(1)
+    void apply_fill(Iterator it, uint64_t fill_qty) noexcept;
+
     // Read-only access to the oldest (highest-priority) order.
     [[nodiscard]] const Order& front() const noexcept { return orders_.front(); }
     [[nodiscard]] Order& front() noexcept { return orders_.front(); }
@@ -48,6 +54,9 @@ public:
     // Iteration support (for debugging and market data snapshots).
     [[nodiscard]] auto begin() const noexcept { return orders_.cbegin(); }
     [[nodiscard]] auto end() const noexcept { return orders_.cend(); }
+
+    // Mutable iterator to the front — only for the MatchingEngine to call apply_fill.
+    [[nodiscard]] Iterator begin_mut() noexcept { return orders_.begin(); }
 
 private:
     Price            price_;

@@ -16,4 +16,12 @@ void PriceLevel::remove(Iterator it) {
     orders_.erase(it);
 }
 
+void PriceLevel::apply_fill(Iterator it, uint64_t fill_qty) noexcept {
+    // Update the order's filled counter and the cached total in one step.
+    // This is the only correct way to record a partial fill — going through
+    // front() and mutating directly would silently break total_quantity_.
+    it->filled.value     += fill_qty;
+    total_quantity_.value -= fill_qty;
+}
+
 }  // namespace mercury
