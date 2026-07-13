@@ -70,9 +70,24 @@ mercury_set_compiler_warnings(mercury_tests)
 include(GoogleTest)
 gtest_discover_tests(mercury_tests)
 
-# --- Benchmarks (stub — Google Benchmark added in Phase 4) ---
-add_executable(mercury_bench benchmarks/bench_stub.cpp)
-target_link_libraries(mercury_bench PRIVATE mercury_core)
+# --- Benchmarks (Google Benchmark) ---
+find_package(benchmark QUIET)
+if(NOT benchmark_FOUND)
+    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+    set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
+    FetchContent_Declare(
+        googlebenchmark
+        GIT_REPOSITORY https://github.com/google/benchmark.git
+        GIT_TAG v1.8.3
+    )
+    FetchContent_MakeAvailable(googlebenchmark)
+endif()
+
+add_executable(mercury_bench
+    benchmarks/bench_order_book.cpp
+    benchmarks/bench_latency_percentiles.cpp
+)
+target_link_libraries(mercury_bench PRIVATE mercury_core benchmark::benchmark benchmark::benchmark_main)
 mercury_set_compiler_warnings(mercury_bench)
 
 # --- Qt Dashboard (Phase 8 — disabled by default) ---
