@@ -90,6 +90,13 @@ add_executable(mercury_bench
 target_link_libraries(mercury_bench PRIVATE mercury_core benchmark::benchmark benchmark::benchmark_main)
 mercury_set_compiler_warnings(mercury_bench)
 
+# Separate binary: overrides global operator new/delete to count allocations.
+# Must not share a binary with the timing benchmarks — the counting overhead
+# would pollute their numbers.
+add_executable(mercury_alloc_count benchmarks/bench_alloc_count.cpp)
+target_link_libraries(mercury_alloc_count PRIVATE mercury_core benchmark::benchmark benchmark::benchmark_main)
+mercury_set_compiler_warnings(mercury_alloc_count)
+
 # --- Qt Dashboard (Phase 8 — disabled by default) ---
 option(MERCURY_BUILD_DASHBOARD "Build Qt engineering dashboard" OFF)
 if(MERCURY_BUILD_DASHBOARD)
