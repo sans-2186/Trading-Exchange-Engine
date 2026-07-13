@@ -52,6 +52,10 @@ static void BM_LatencyPercentiles(benchmark::State& state) {
         std::vector<OrderId> live;
         uint64_t next_id = 1;
 
+        // Reused across all calls — allocates during warmup, then never again.
+        std::vector<Trade> trade_buffer;
+        trade_buffer.reserve(64);
+
         std::vector<int64_t> submit_ns;
         std::vector<int64_t> cancel_ns;
         submit_ns.reserve(kOps);
@@ -73,9 +77,9 @@ static void BM_LatencyPercentiles(benchmark::State& state) {
                 const OrderId id = order.id;
 
                 const auto t0 = Clock::now();
-                auto trades = engine.submit_order(std::move(order));
+                engine.submit_order(std::move(order), trade_buffer);
                 const auto t1 = Clock::now();
-                benchmark::DoNotOptimize(trades);
+                benchmark::DoNotOptimize(trade_buffer);
 
                 submit_ns.push_back(
                     std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count());

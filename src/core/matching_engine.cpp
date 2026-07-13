@@ -89,13 +89,13 @@ void MatchingEngine::match_sell(Order& incoming, std::vector<Trade>& trades) {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-std::vector<Trade> MatchingEngine::submit_order(Order order) {
-    std::vector<Trade> trades;
+void MatchingEngine::submit_order(Order order, std::vector<Trade>& out_trades) {
+    out_trades.clear();
 
     if (order.side == Side::Buy) {
-        match_buy(order, trades);
+        match_buy(order, out_trades);
     } else {
-        match_sell(order, trades);
+        match_sell(order, out_trades);
     }
 
     // Rest any unfilled remainder — Limit orders only.
@@ -103,7 +103,11 @@ std::vector<Trade> MatchingEngine::submit_order(Order order) {
     if (!order.is_fully_filled() && order.type == OrderType::Limit) {
         book_.add_order(std::move(order));
     }
+}
 
+std::vector<Trade> MatchingEngine::submit_order(Order order) {
+    std::vector<Trade> trades;
+    submit_order(std::move(order), trades);
     return trades;
 }
 

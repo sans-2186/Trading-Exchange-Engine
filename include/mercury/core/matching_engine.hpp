@@ -21,11 +21,14 @@ namespace mercury {
 // only through read-only queries exposed here.
 class MatchingEngine {
 public:
-    // Submit an order for matching.
-    // Returns all Trade records generated during this operation.
-    // A fully resting limit order returns an empty vector.
-    // A fully matched order also returns all trades.
-    // Partial fills return trades for the filled portion; remainder rests (Limit) or is dropped (Market).
+    // Submit an order for matching — hot-path overload.
+    // Clears `out_trades`, then fills it with all Trade records generated.
+    // The caller owns the buffer: reuse the same vector across calls to
+    // amortize its allocation to zero after warmup.
+    void submit_order(Order order, std::vector<Trade>& out_trades);
+
+    // Convenience overload — allocates a fresh vector per call.
+    // Prefer the out-parameter overload on performance-sensitive paths.
     [[nodiscard]] std::vector<Trade> submit_order(Order order);
 
     // Cancel a resting order by ID.

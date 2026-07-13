@@ -82,6 +82,10 @@ static void BM_AllocationCount(benchmark::State& state) {
         std::vector<OrderId> live;
         uint64_t next_id = 1;
 
+        // Reused buffer — the optimization under test.
+        std::vector<Trade> trade_buffer;
+        trade_buffer.reserve(64);
+
         AllocStats submit_stats;
         AllocStats cancel_stats;
 
@@ -101,9 +105,9 @@ static void BM_AllocationCount(benchmark::State& state) {
                 const OrderId id = order.id;
 
                 const auto before = g_alloc_count;
-                auto trades = engine.submit_order(std::move(order));
+                engine.submit_order(std::move(order), trade_buffer);
                 const auto delta = g_alloc_count - before;
-                benchmark::DoNotOptimize(trades);
+                benchmark::DoNotOptimize(trade_buffer);
 
                 submit_stats.total += delta;
                 submit_stats.calls += 1;
